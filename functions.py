@@ -180,7 +180,7 @@ def graph(x: list | np.ndarray, y: list | tuple | np.ndarray, trendlinie: bool =
         elif graph == "plot":
             ax.plot(x, y, linewidth=1.5)
         if trendlinie:
-            b, a, s_b, s_a = wert_xy(x, y)
+            b, a, s_b, s_a, s_y = wert_xy(x, y)
             ax.plot(x, [(b * i + a) for i in x], color="grey", linestyle="dashed",
                     label=rf"Trendlinie: {b: .2e}$*x + {a: .2e}$")
             ax.legend()
