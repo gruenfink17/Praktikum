@@ -236,3 +236,115 @@ def latex(data: list, headers: list):
     table = tl.tabulate(tab, headers=headers, tablefmt="latex_booktabs", numalign="center", stralign="center")
     return table
 
+#Sachen für lineare Regression mit Achsenabschnitt im Ursprung
+def get_c(x,y):
+    xy = get_xy(x, y)
+    xx = get_xx(x)
+    return (xy/xx)
+
+def usum_di2(x,y):
+    c=get_c(x,y)
+
+    d = 0
+    for i in range(len(x)):
+        d += (y[i] - c * x[i]) ** 2
+    return d
+
+def get_s_c(x,y):
+    if len(x) <= 2:
+        return 9999999999999
+    else:
+        xx = get_xx(x)
+        s = (1 / (len(x) - 1)) * ((usum_di2(x, y)) / xx)
+        return math.sqrt(s)
+
+#actual regression mit ursprung
+def uwert_xy(x: list | np.ndarray, y: np.ndarray, name: str = None) -> tuple:
+    if name is not None:
+        print(f"{name}:")
+
+    # Convert to np.ndrarray if not already so.
+    if type(x) == list:
+        x = np.array(x)
+    if type(y) == list:
+        y = np.array(y)
+
+    # Remove all None entries from the given data
+    pos1 = x == None  # '==' is correct. Is would check if array is None not whether elements of array are None.
+    pos2 = y == None
+    pos = np.logical_or(pos1, pos2)
+    x = x[~pos]
+    y = y[~pos]
+
+    # do calcultions
+    c=get_c(x,y)
+    s_c = get_s_c(x,y)
+    c_perc=s_c/c if c != 0 else 99999999999999
+
+
+    if name is not None:
+        print(f" -  c = {c: .3e} +- {s_c: .3e}  (+- {c_perc: .3e})")
+        print()
+
+    return c, s_c
+
+
+#Regressionsgraph wenn Achsenabschnitt im Ursprung gefordert
+def ugraph(x: list | np.ndarray, y: list | tuple | np.ndarray, trendlinie: bool = False, title: str = None,
+          xlabel: str = None, multiple=False,
+          ylabel: str = None, xlog: bool = False, ylog: bool = False, graph="scatter", xlim=None, ylim=None) -> None:
+    """
+
+    :param multiple:
+    :param x: data for x-axis
+    :param y: data for y-axis
+    :param trendlinie:
+    :param title: graph title
+    :param xlabel: Label for y-axis
+    :param ylabel: Label for y-axis
+    :param xlog: Determines wether the x-axis should be plotted logarithmic.
+    :param ylog: Determines wether the y-axis should be plotted logarithmic.
+    :param xlim: limits for x-axis
+    :param ylim: limits for y-axis
+    :return: None
+    """
+    fig, ax = plt.subplots(layout='constrained')
+    plt.plot
+    if (type(y) is tuple) or multiple:
+        for y_i in y:
+            if y_i[2] == "scatter":
+                ax.scatter(x, y_i[0], linewidths=1, label=y_i[1])
+            elif y_i[2] == "plot":
+                ax.plot(x, y_i[0], linewidth=1, label=y_i[1])
+            if trendlinie:
+                c,s_c = uwert_xy(x, y_i[0])
+                ax.plot(x, [(c * i ) for i in x], color="grey", linestyle="dashed",
+                        label=rf"{y_i[1]}: Trendlinie: {c: .2e}$*x$")
+        ax.legend()
+
+    else:
+        if graph == "scatter":
+            ax.scatter(x, y, linewidths=2)
+        elif graph == "plot":
+            ax.plot(x, y, linewidth=1.5)
+        if trendlinie:
+            c, s_c = uwert_xy(x, y)
+            ax.plot(x, [(c * i ) for i in x], color="grey", linestyle="dashed",
+                    label=rf"Trendlinie: {c: .2e}$*x$")
+            ax.legend()
+
+    if xlog:
+        ax.set_xscale("log")
+    if ylog:
+        ax.set_yscale("log")
+
+    ax.set_xlabel(xlabel)
+    ax.set_ylabel(ylabel)
+    ax.set_title(title)
+    ax.grid()
+    #mache mal ein paar eigene dazu:
+    if xlim is not None:
+     ax.set_xlim(xlim)
+    if ylim is not None:
+        ax.set_ylim(ylim)
+    plt.show()
