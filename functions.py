@@ -111,7 +111,7 @@ def wert_xy(x: list | np.ndarray, y: np.ndarray, name: str = None) -> tuple:
     x = x[~pos]
     y = y[~pos]
 
-    # do calcultions
+    # do calculations
     b = get_b(x, y)
     s_b = get_s_b(x, y)
     b_perc = s_b / b if b != 0 else 999999999999999
@@ -281,7 +281,7 @@ def owert_xy(x: list | np.ndarray, y: np.ndarray, name: str = None) -> tuple:
     x = x[~pos]
     y = y[~pos]
 
-    # do calcultions
+    # do calculations
     c=get_c(x,y)
     s_c = get_s_c(x,y)
     c_perc=s_c/c if c != 0 else 99999999999999
