@@ -242,7 +242,7 @@ def get_c(x,y):
     xx = get_xx(x)
     return (xy/xx)
 
-def usum_di2(x,y):
+def osum_di2(x,y):
     c=get_c(x,y)
 
     d = 0
@@ -255,11 +255,11 @@ def get_s_c(x,y):
         return 9999999999999
     else:
         xx = get_xx(x)
-        s = (1 / (len(x) - 1)) * ((usum_di2(x, y)) / xx)
+        s = (1 / (len(x) - 1)) * ((osum_di2(x, y)) / xx)
         return math.sqrt(s)
 
 #actual regression mit ursprung
-def uwert_xy(x: list | np.ndarray, y: np.ndarray, name: str = None) -> tuple:
+def owert_xy(x: list | np.ndarray, y: np.ndarray, name: str = None) -> tuple:
     if name is not None:
         print(f"{name}:")
 
@@ -290,9 +290,9 @@ def uwert_xy(x: list | np.ndarray, y: np.ndarray, name: str = None) -> tuple:
 
 
 #Regressionsgraph wenn Achsenabschnitt im Ursprung gefordert
-def ugraph(x: list | np.ndarray, y: list | tuple | np.ndarray, trendlinie: bool = False, title: str = None,
-          xlabel: str = None, multiple=False,
-          ylabel: str = None, xlog: bool = False, ylog: bool = False, graph="scatter", xlim=None, ylim=None) -> None:
+def ograph(x: list | np.ndarray, y: list | tuple | np.ndarray, trendlinie: bool = False, title: str = None,
+           xlabel: str = None, multiple=False,
+           ylabel: str = None, xlog: bool = False, ylog: bool = False, graph="scatter", xlim=None, ylim=None) -> None:
     """
 
     :param multiple:
@@ -317,7 +317,7 @@ def ugraph(x: list | np.ndarray, y: list | tuple | np.ndarray, trendlinie: bool 
             elif y_i[2] == "plot":
                 ax.plot(x, y_i[0], linewidth=1, label=y_i[1])
             if trendlinie:
-                c,s_c = uwert_xy(x, y_i[0])
+                c,s_c = owert_xy(x, y_i[0])
                 ax.plot(x, [(c * i ) for i in x], color="grey", linestyle="dashed",
                         label=rf"{y_i[1]}: Trendlinie: {c: .2e}$*x$")
         ax.legend()
@@ -328,7 +328,7 @@ def ugraph(x: list | np.ndarray, y: list | tuple | np.ndarray, trendlinie: bool 
         elif graph == "plot":
             ax.plot(x, y, linewidth=1.5)
         if trendlinie:
-            c, s_c = uwert_xy(x, y)
+            c, s_c = owert_xy(x, y)
             ax.plot(x, [(c * i ) for i in x], color="grey", linestyle="dashed",
                     label=rf"Trendlinie: {c: .2e}$*x$")
             ax.legend()
