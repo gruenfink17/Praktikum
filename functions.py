@@ -258,6 +258,11 @@ def get_s_c(x,y):
         s = (1 / (len(x) - 1)) * ((osum_di2(x, y)) / xx)
         return math.sqrt(s)
 
+#neu eingefügt: Standardabweichung des y-Wertes der linearen Regression
+def get_os_y(x: list, y: list) -> float:
+    s = (osum_di2(x,y))/(len(x) - 2)
+    return math.sqrt(s)
+
 #actual regression mit ursprung
 def owert_xy(x: list | np.ndarray, y: np.ndarray, name: str = None) -> tuple:
     if name is not None:
@@ -281,12 +286,14 @@ def owert_xy(x: list | np.ndarray, y: np.ndarray, name: str = None) -> tuple:
     s_c = get_s_c(x,y)
     c_perc=s_c/c if c != 0 else 99999999999999
 
+    s_y = get_os_y(x, y)
+
 
     if name is not None:
         print(f" -  c = {c: .3e} +- {s_c: .3e}  (+- {c_perc: .3e})")
         print()
 
-    return c, s_c
+    return c, s_c, s_y
 
 
 #Regressionsgraph wenn Achsenabschnitt im Ursprung gefordert
